@@ -1,14 +1,12 @@
 package lab5;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Random;
 
 public class Puzzle {
 	public static final int MAX_ROW = 3;// 3x3: Dimension of the puzzle map
@@ -100,7 +98,7 @@ public class Puzzle {
 				int tmp = currentState.getTile(row, col);
 				result.updateTile(row, col, 0);
 				result.updateTile(whiteTile[0], whiteTile[1], tmp);
-				result.setH(computeH2(result));
+				result.setH(computeH1(result));
 				return result;
 			}
 		}
@@ -112,7 +110,7 @@ public class Puzzle {
 				int tmp = currentState.getTile(row, col);
 				result.updateTile(row, col, 0);
 				result.updateTile(whiteTile[0], whiteTile[1], tmp);
-				result.setH(computeH2(result));
+				result.setH(computeH1(result));
 				return result;
 			}
 
@@ -125,7 +123,7 @@ public class Puzzle {
 				int tmp = currentState.getTile(row, col);
 				result.updateTile(row, col, 0);
 				result.updateTile(whiteTile[0], whiteTile[1], tmp);
-				result.setH(computeH2(result));
+				result.setH(computeH1(result));
 				return result;
 			}
 
@@ -138,7 +136,7 @@ public class Puzzle {
 				int tmp = currentState.getTile(row, col);
 				result.updateTile(row, col, 0);
 				result.updateTile(whiteTile[0], whiteTile[1], tmp);
-				result.setH(computeH2(result));
+				result.setH(computeH1(result));
 				return result;
 			}
 
@@ -182,6 +180,7 @@ public class Puzzle {
 			List<Node> successors = getSuccessors(currentNode);
 			for (Node successor : successors) {
 				if (!explored.contains(successor) && !frontier.contains(successor)) {
+					successor.setG(currentNode.getG() + 1);
 					frontier.add(successor);
 				}
 			}
@@ -203,26 +202,28 @@ public class Puzzle {
 			List<Node> successors = getSuccessors(currentNode);
 			for (Node successor : successors) {
 				if (!explored.contains(successor) && !frontier.contains(successor)) {
+					successor.setG(currentNode.getG() + 1);
 					frontier.add(successor);
+				} else if (frontier.contains(successor)) {
+					if (successor.getG() > currentNode.getG() +1 ) {
+						frontier.remove(successor);
+						successor.setG(currentNode.getG() + 1);
+						frontier.add(successor);
+						
+					}
 				}
 			}
 		}
 	}
 
 	public static void main(String[] args) {
-		Puzzle puzzle = new Puzzle();
-		puzzle.readInput("src/asset/PuzzleMap.txt", "src/asset/PuzzleGoalState.txt");
-		Node initialState = puzzle.getInitialState();
-		Node goalState = puzzle.getGoalState();
-		System.out.println("H1: " + puzzle.computeH1(initialState));
-		System.out.println("H2: " + puzzle.computeH2(initialState));
+		Puzzle puz = new Puzzle();
+		puz.readInput("src/asset/PuzzleMap.txt", "src/asset/PuzzleGoalState.txt");
 
-		// Test moveWhiteTile
-		System.out.println("Test moveWhiteTile");
-		System.out.println(initialState);
-		System.out.println("Move white tile UP");
-		System.out.println(puzzle.moveWhiteTile(initialState, 'u'));
+		System.out.println(puz.getInitialState().getH());
 
-		puzzle.greedyBestFirstSearchWithH1();
+		puz.ASearch();
+
 	}
+
 }
