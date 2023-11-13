@@ -2,7 +2,7 @@ package lab6;
 
 import java.util.List;
 
-public class traditionalHillClimbingSearch {
+public class TraditionalHillClimbingSearch {
 	public Node search(Node initialNode) {
 		Node currentNode = initialNode;
 		while (true) {
@@ -59,21 +59,21 @@ public class traditionalHillClimbingSearch {
 	public static void main(String[] args) {
 		Node initialState = new Node();
 		initialState.generateBoard();
-		traditionalHillClimbingSearch search = new traditionalHillClimbingSearch();
+		TraditionalHillClimbingSearch search = new TraditionalHillClimbingSearch();
 		Node solution = search.search(initialState);
 		solution.displayBoard();
 		System.out.println(solution.getH());
 
 		Node initialState1 = new Node();
 		initialState1.generateBoard();
-		traditionalHillClimbingSearch search1 = new traditionalHillClimbingSearch();
+		TraditionalHillClimbingSearch search1 = new TraditionalHillClimbingSearch();
 		Node solution1 = search1.executeHillClimbingWithRandomRestart(initialState1);
 		solution1.displayBoard();
 		System.out.println(solution1.getH());
 
 		Node initialState2 = new Node();
 		initialState2.generateBoard();
-		traditionalHillClimbingSearch search2 = new traditionalHillClimbingSearch();
+		TraditionalHillClimbingSearch search2 = new TraditionalHillClimbingSearch();
 		Node solution2 = search2.selectNextRandomCandidate();
 		solution2.displayBoard();
 		System.out.println(solution2.getH());
