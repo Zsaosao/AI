@@ -1,6 +1,7 @@
 package lab7;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -24,27 +25,25 @@ public class GA_NQueenAlgo {
 		initPopulation();
 		int iteration = 0;
 		while (iteration < MAX_ITERATIONS) {
-			Node parent1 = getParentByTournamentSelection();
-			Node parent2 = getParentByTournamentSelection();
-			Node child = reproduce(parent1, parent2);
-			if (rd.nextDouble() < MUTATION_RATE) {
-				mutate(child);
+			ArrayList<Node> newPopulation = new ArrayList<Node>();
+			for (int i = 0; i < POP_SIZE; i++) {
+
+				Node parent1 = getParentByTournamentSelection();
+				Node parent2 = getParentByTournamentSelection();
+				Node child = reproduce(parent1, parent2);
+				if (rd.nextDouble() < MUTATION_RATE) {
+					mutate(child);
+					if (child.getH() == 0) {
+						return child;
+					}
+				}
+				newPopulation.add(child);
 			}
-			population.add(child);
+			population = newPopulation; // f0 -> f1 -> f2 ... f MAX_ITERATIONS
 			iteration++;
+			Collections.sort(population);
 		}
-		return getBestIndividual();
-
-	}
-
-	private Node getBestIndividual() {
-		Node best = null;
-		for (Node ni : population) {
-			if (best == null || ni.getH() < best.getH()) {
-				best = ni;
-			}
-		}
-		return best;
+		return population.get(0);
 	}
 
 	// Mutate an individual by selecting a random Queen and
@@ -90,5 +89,12 @@ public class GA_NQueenAlgo {
 	public Node getParentByRandomSelection() {
 		int i = rd.nextInt(POP_SIZE);
 		return population.get(i);
+	}
+
+	public static void main(String[] args) {
+		GA_NQueenAlgo algo = new GA_NQueenAlgo();
+		Node best = algo.execute();
+		best.displayBoard();
+		System.out.println(best.getH());
 	}
 }
